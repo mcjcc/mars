@@ -3,6 +3,7 @@ import Paper from 'material-ui/Paper';
 import AppBar from 'material-ui/AppBar';
 import SearchBox from '../containers/SearchBox';
 import MovieDetail from '../containers/MovieDetail';
+import NowPlaying from '../containers/NowPlaying';
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
         title="Cliff Movie DB"
         iconElementLeft={<img src="https://s3.amazonaws.com/tt-public-assets/Cliff_icon.png" alt="Logo" />}
       />
+      <NowPlaying />
       <SearchBox />
       <MovieDetail />
     </Paper>
