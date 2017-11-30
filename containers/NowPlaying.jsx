@@ -5,13 +5,17 @@ import { bindActionCreators } from 'redux';
 import Paper from 'material-ui/Paper';
 import axios from 'axios';
 import MovieList from '../components/MovieList';
+<<<<<<< HEAD
 import { fetchMovie1, fetchMovie2 } from '../actions/MovieAction';
 
+=======
+>>>>>>> Add NowPlaying section
 
 class NowPlaying extends Component {
   constructor() {
     super();
     this.state = {
+<<<<<<< HEAD
       nowPlaying: []
     }
 
@@ -36,6 +40,16 @@ class NowPlaying extends Component {
   componentDidMount() {
     console.log('will mount!');
     this.fetchNowPlaying();
+=======
+      newReleases: []
+    }
+
+    this.fetchNewReleases = this.fetchNewReleases.bind(this);
+  }
+
+  fetchNewReleases() {
+
+>>>>>>> Add NowPlaying section
   }
 
   render() {
@@ -44,8 +58,13 @@ class NowPlaying extends Component {
       <div>
         Now Playing
         <MovieList
+<<<<<<< HEAD
           movies={this.state.nowPlaying}
           fetchMovie={this.fetchPrimaryMovie}
+=======
+          movies={this.state.newReleases}
+          fetchMovie={this.fetchNewReleases}
+>>>>>>> Add NowPlaying section
         />
       </div>
     );
@@ -53,6 +72,7 @@ class NowPlaying extends Component {
   }
 }
 
+<<<<<<< HEAD
 function mapStateToProps({ primaryMovie, secondaryMovie }) {
   return { primaryMovie, secondaryMovie };
 }
@@ -63,3 +83,6 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(NowPlaying);
 // export default NowPlaying;
+=======
+export default NowPlaying;
+>>>>>>> Add NowPlaying section
