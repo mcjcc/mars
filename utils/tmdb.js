@@ -41,7 +41,6 @@ exports.fetchMovieById = id => {
  * @return {Promise:[String]} images
  */
 exports.fetchImageById = id => {
-  console.log('exports.fetchImageById in tmdb file');
   return axios.get(`http://api.themoviedb.org/3/movie/${id}/images`, {
     params: {
       api_key: process.env.API_KEY,
@@ -54,14 +53,12 @@ exports.fetchImageById = id => {
 };
 
 exports.fetchMoviesNowPlaying = () => {
-  console.log('inside tmdb.fetchMoviesNowPlaying');
   return axios.get(`https://api.themoviedb.org/3/movie/now_playing`, {
     params: {
       api_key: process.env.API_KEY,
       region: 'US',
     },
   }).then((res) => {
-    console.log(res.data);
     return res.data;
   }).catch(err => console.error(err.response.data.status_message))
 };
