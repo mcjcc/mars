@@ -49,3 +49,13 @@ exports.fetchImageById = id => (
     return images.map(img => img.file_path);
   }).catch(err => console.error(err.response.data.status_message))
 );
+
+exports.fetchMoviesNowPlaying = () => (
+  axios.get(`https://api.themoviedb.org/3/movie/now_playing?api_key=4e798c75616ea5891024eaeb753d6aa6&language=en-US&page=1&region=US`, {
+    params: {
+      api_key: process.env.API_KEY
+    }
+  }).then((res) => {
+    res.data
+  }).catch(err => console.error(err.response.data.status_message))
+);
