@@ -16,7 +16,8 @@ const Movies = db.define('movies', {
   budget: Sequelize.INTEGER,
   revenue: Sequelize.INTEGER,
   estimatedProfit: Sequelize.INTEGER,
-  releaseDate: Sequelize.DATE
+  releaseDate: Sequelize.DATE,
+  trailerKey: Sequelize.STRING
   // searchTime: Sequelize.DATE
 }, {
   timestamps: false,
@@ -153,7 +154,8 @@ function insertMovie(movie) {
     budget: movie.budget,
     revenue: movie.revenue,
     estimatedProfit: movie.estimatedProfit,
-    releaseDate: movie.releaseDate
+    releaseDate: movie.releaseDate,
+    trailerKey: movie.trailerKey
 
   }).then((newMovie) => {
     let promises = [];
@@ -205,7 +207,7 @@ function insertMovie(movie) {
   //   });
   //   Images.create({
   //     url: movie.images[i],
-  //     movieId: 
+  //     movieId:
   //   });
   // }
 };
