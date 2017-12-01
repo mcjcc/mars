@@ -30,6 +30,7 @@ app.get('/search/:movie', (req, res) => {
   });
 });
 
+
 app.get('/movie/:tmdbId', async (req, res) => {
   const { tmdbId } = req.params;
 
