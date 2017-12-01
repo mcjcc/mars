@@ -24,6 +24,7 @@ const url = 'https://image.tmdb.org/t/p/w154';
 function MovieList({ movies, fetchMovie }) {
   const movieList = movies.filter(movie => movie.poster_path).map(movie => (
     <GridTile
+      className="card-tile"
       key={movie.id}
       title={movie.title}
       titleStyle={styles.titleStyle}
