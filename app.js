@@ -175,7 +175,6 @@ app.post('/update/aboutme/:aboutme', (req, res) => {
 app.get('/fetchNowPlaying', (req, res) => {
   console.log('/fetchNowPlaying');
   tmdb.fetchMoviesNowPlaying().then((data) => {
-    console.log('line 21 of app.js');
     res.send(data);
   });
 });
@@ -186,7 +185,6 @@ app.get('/search/:movie', (req, res) => {
     res.send(data);
   });
 });
-
 
 app.get('/movie/:tmdbId', async (req, res) => {
   const { tmdbId } = req.params;
@@ -202,9 +200,10 @@ app.get('/movie/:tmdbId', async (req, res) => {
       return res.send(results);
     }
 
-    const data = [await tmdb.fetchMovieById(tmdbId), await tmdb.fetchImageById(tmdbId)];
+    const data = [await tmdb.fetchMovieById(tmdbId), await tmdb.fetchImageById(tmdbId), await tmdb.fetchMovieTrailersById(tmdbId)];
     const movieData = data[0];
     const images = data[1];
+    const trailerKeys = data[2]; // trailers should be an array of youtube keys (string)
 
     const results = { tmdbId };
     results.title = movieData.title;
@@ -215,6 +214,7 @@ app.get('/movie/:tmdbId', async (req, res) => {
     // resutlts.estimatedProfit =
     results.releaseDate = movieData.release_date;
     results.images = images;
+    results.trailerKey = trailerKeys[0]; //  use first trailer video key
     //results.searchTime = moment.now()
 
     const smData = [

@@ -63,7 +63,7 @@ exports.fetchMoviesNowPlaying = () => {
   }).catch(err => console.error(err.response.data.status_message))
 };
 
-exports.fetchMovieTrailer = (id) => {
+exports.fetchMovieTrailersById = (id) => {
   return axios.get(`https://api.themoviedb.org/3/movie/${id}/videos`, {
     params: {
       api_key: process.env.API_KEY,
