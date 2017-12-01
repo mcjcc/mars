@@ -55,6 +55,7 @@ app.use(bodyParser.json());
 const port = process.env.PORT || 7331;
 
 app.get('/', (req, res) => {
+  console.log('this is the landing page!');
   res.send('This is the landing page!');
 });
 
@@ -170,11 +171,22 @@ app.post('/update/aboutme/:aboutme', (req, res) => {
   //db.update
   res.sendStatus(200);
 });
+
+app.get('/fetchNowPlaying', (req, res) => {
+  console.log('/fetchNowPlaying');
+  tmdb.fetchMoviesNowPlaying().then((data) => {
+    console.log('line 21 of app.js');
+    res.send(data);
+  });
+});
+
 app.get('/search/:movie', (req, res) => {
+  console.log('search movie: ', req.params.movie);
   tmdb.searchMoviesByName(req.params.movie).then((data) => {
     res.send(data);
   });
 });
+
 
 app.get('/movie/:tmdbId', async (req, res) => {
   const { tmdbId } = req.params;
