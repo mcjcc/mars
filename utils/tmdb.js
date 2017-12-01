@@ -5,8 +5,9 @@ const axios = require('axios');
  * @param {String} query
  * @return {Promise:Object} results
  */
-exports.searchMoviesByName = query => (
-  axios.get('http://api.themoviedb.org/3/search/movie', {
+exports.searchMoviesByName = query => {
+  console.log('exports.searchMoviesByName in tmdb file');
+  return axios.get('http://api.themoviedb.org/3/search/movie', {
     params: {
       api_key: process.env.API_KEY,
       // 'language': 'en-US',
@@ -15,15 +16,16 @@ exports.searchMoviesByName = query => (
   }).then(res => (
     res.data
   )).catch(err => console.error(err.response.data.status_message))
-);
+};
 
 /*
  * Fetch movie data from TMDB by TMDB ID
  * @param {Number} id
  * @return {Promise:{see https://developers.themoviedb.org/3/movies/get-movie-details}} data
  */
-exports.fetchMovieById = id => (
-  axios.get(`http://api.themoviedb.org/3/movie/${id}`, {
+exports.fetchMovieById = id => {
+  console.log('exports.fetchMovieById in tmdb file');
+  return axios.get(`http://api.themoviedb.org/3/movie/${id}`, {
     params: {
       api_key: process.env.API_KEY,
       // 'language': 'en-US',
@@ -31,15 +33,16 @@ exports.fetchMovieById = id => (
   }).then(res => (
     res.data
   )).catch(err => console.error(err.response.data.status_message))
-);
+};
 
 /*
  * Fetch promotional images from TMDB by TMDB ID
  * @param {Number} id
  * @return {Promise:[String]} images
  */
-exports.fetchImageById = id => (
-  axios.get(`http://api.themoviedb.org/3/movie/${id}/images`, {
+exports.fetchImageById = id => {
+  console.log('exports.fetchImageById in tmdb file');
+  return axios.get(`http://api.themoviedb.org/3/movie/${id}/images`, {
     params: {
       api_key: process.env.API_KEY,
       // 'language': 'en-US',
@@ -48,14 +51,17 @@ exports.fetchImageById = id => (
     const images = res.data.backdrops;
     return images.map(img => img.file_path);
   }).catch(err => console.error(err.response.data.status_message))
-);
+};
 
-exports.fetchMoviesNowPlaying = () => (
-  axios.get(`https://api.themoviedb.org/3/movie/now_playing?api_key=4e798c75616ea5891024eaeb753d6aa6&language=en-US&page=1&region=US`, {
+exports.fetchMoviesNowPlaying = () => {
+  console.log('inside tmdb.fetchMoviesNowPlaying');
+  return axios.get(`https://api.themoviedb.org/3/movie/now_playing`, {
     params: {
-      api_key: process.env.API_KEY
-    }
+      api_key: process.env.API_KEY,
+      region: 'US',
+    },
   }).then((res) => {
-    res.data
+    console.log(res.data);
+    return res.data;
   }).catch(err => console.error(err.response.data.status_message))
-);
+};
