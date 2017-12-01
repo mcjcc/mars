@@ -9,3 +9,7 @@ body {
 .recharts-wrapper {
   margin: 0 auto;
 }
+
+.card-tile {
+  cursor: pointer;
+}
