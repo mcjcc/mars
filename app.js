@@ -3,6 +3,7 @@ const tmdb = require('./utils/tmdb');
 const { movieTrend } = require('./utils/trendFetch');
 const { avgTweetEmotion } = require('./utils/twitterEmotion');
 const Movie = require('./db/Movie');
+const SQLMovie = require('./db/SQLMovie');
 
 const app = express();
 
@@ -24,10 +25,11 @@ app.get('/movie/:tmdbId', async (req, res) => {
   const { tmdbId } = req.params;
 
   try {
-    const movie = await Movie.findOne({ tmdbId });
+    const movie = await SQLMovie.findMovie({ tmdbId });
     if (movie) {
+      //TODO: update movie table searchTime to now
       const emotion = await avgTweetEmotion(movie.title);
-      const results = movie.toObject();
+      const results = movie;
       results.emotion = emotion;
       return res.send(results);
     }
@@ -45,6 +47,7 @@ app.get('/movie/:tmdbId', async (req, res) => {
     // resutlts.estimatedProfit =
     results.releaseDate = movieData.release_date;
     results.images = images;
+    //results.searchTime = moment.now()
 
     const smData = [
       await movieTrend(results.title, results.releaseDate),
@@ -63,12 +66,12 @@ app.get('/movie/:tmdbId', async (req, res) => {
       };
     });
 
-    const movieDoc = new Movie(results);
-    await movieDoc.save();
+    await SQLMovie.insertMovie(results);
 
     results.emotion = emotion;
     return res.send(results);
   } catch (err) {
+    console.log(err);
     return res.status(400).send(err);
   }
 });
