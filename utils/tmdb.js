@@ -62,3 +62,15 @@ exports.fetchMoviesNowPlaying = () => {
     return res.data;
   }).catch(err => console.error(err.response.data.status_message))
 };
+
+exports.fetchMovieTrailer = (id) => {
+  return axios.get(`https://api.themoviedb.org/3/movie/${id}/videos`, {
+    params: {
+      api_key: process.env.API_KEY,
+      language: 'en-US'
+    },
+  }).then((res) => {
+    let videos = res.data.results;
+    return videos.map(video => video.key);
+  }).catch(err => console.error(err.response.data.status_message));
+};
