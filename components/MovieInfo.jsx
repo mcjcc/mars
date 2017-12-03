@@ -52,27 +52,23 @@ class MovieInfo extends Component {
       secondaryTrailerModalOpen: false
     };
 
+    console.log('this.state.primaryTrailerModalOpen: ', this.state.primaryTrailerModalOpen);
   }
 
   handlePrimaryTrailerModalOpen() {
-    this.props.openModal();
-    console.log(this.props.modalOpen);
-    this.setState({primaryTrailerModalOpen: this.props.modalOpen});
+    this.setState({primaryTrailerModalOpen: true});
   }
 
   handleSecondaryTrailerModalOpen() {
-    this.props.openModal();
-    this.setState({secondaryTrailerModalOpen: this.props.openModal()});
+    this.setState({secondaryTrailerModalOpen: true});
   }
 
   handlePrimaryTrailerModalClose() {
-    this.props.closeModal();
-    this.setState({primaryTrailerModalOpen: this.props.modalOpen});
+    this.setState({primaryTrailerModalOpen: false});
   }
 
   handleSecondaryTrailerModalClose() {
-    this.props.closeModal();
-    this.setState({secondaryTrailerModalOpen: this.props.modalOpen});
+    this.setState({secondaryTrailerModalOpen: false});
   }
 
   render() {
@@ -116,7 +112,7 @@ class MovieInfo extends Component {
             <TableRowColumn>Trailer</TableRowColumn>
             <TableRowColumn>
               {primaryMovie.trailerKey &&
-                <RaisedButton label="Watch Trailer" onClick={ () => {this.handlePrimaryTrailerModalOpen();} } />
+                <RaisedButton label="Watch Trailer" primary={true} onClick={ () => {this.handlePrimaryTrailerModalOpen();} } />
               }
                 <Dialog
                   title="Movie Trailer"
@@ -131,7 +127,7 @@ class MovieInfo extends Component {
 
               <TableRowColumn>
                 {secondaryMovie.trailerKey &&
-                  <RaisedButton label="Watch Trailer" onClick={ () => {this.handleSecondaryTrailerModalOpen();} } />
+                  <RaisedButton label="Watch Trailer" primary={true} onClick={ () => {this.handleSecondaryTrailerModalOpen();} } />
                 }
                   <Dialog
                     title="Movie Trailer"
