@@ -57,5 +57,9 @@ body {
 
 .tile-img {
   width: 50%;
-  
+
+}
+
+.card-tile {
+  cursor: pointer;
 }

@@ -55,6 +55,7 @@ app.use(bodyParser.json());
 const port = process.env.PORT || 7331;
 
 app.get('/', (req, res) => {
+  console.log('this is the landing page!');
   res.send('This is the landing page!');
 });
 
@@ -170,7 +171,16 @@ app.post('/update/aboutme/:aboutme', (req, res) => {
   //db.update
   res.sendStatus(200);
 });
+
+app.get('/fetchNowPlaying', (req, res) => {
+  console.log('/fetchNowPlaying');
+  tmdb.fetchMoviesNowPlaying().then((data) => {
+    res.send(data);
+  });
+});
+
 app.get('/search/:movie', (req, res) => {
+  console.log('search movie: ', req.params.movie);
   tmdb.searchMoviesByName(req.params.movie).then((data) => {
     res.send(data);
   });
@@ -190,9 +200,10 @@ app.get('/movie/:tmdbId', async (req, res) => {
       return res.send(results);
     }
 
-    const data = [await tmdb.fetchMovieById(tmdbId), await tmdb.fetchImageById(tmdbId)];
+    const data = [await tmdb.fetchMovieById(tmdbId), await tmdb.fetchImageById(tmdbId), await tmdb.fetchMovieTrailersById(tmdbId)];
     const movieData = data[0];
     const images = data[1];
+    const trailerKeys = data[2]; // trailers should be an array of youtube keys (string)
 
     const results = { tmdbId };
     results.title = movieData.title;
@@ -203,6 +214,7 @@ app.get('/movie/:tmdbId', async (req, res) => {
     // resutlts.estimatedProfit =
     results.releaseDate = movieData.release_date;
     results.images = images;
+    results.trailerKey = trailerKeys[0]; //  use first trailer video key
     //results.searchTime = moment.now()
 
     const smData = [

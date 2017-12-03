@@ -6,6 +6,7 @@ import AppBar from 'material-ui/AppBar';
 import FrontPageGridListView from './FrontPageMovieGridList';
 import TileImageView from './TileView';
 import sampleData from './sampleData';
+import NowPlaying from '../containers/NowPlaying';
 
 
 class FrontPage extends React.Component {
@@ -13,7 +14,7 @@ class FrontPage extends React.Component {
     super();
     this.state = {
       view: 'MainPage',
-      tile: '', 
+      tile: '',
       data: sampleData
     };
     this.changeView = this.changeView.bind(this);
@@ -38,6 +39,7 @@ class FrontPage extends React.Component {
     if (currentView === 'search') {
       return (
         <div>
+          <NowPlaying />
           <SearchBox />
           <MovieDetail />
         </div>
@@ -66,9 +68,9 @@ class FrontPage extends React.Component {
     return (
       <div>
         <AppBar
-          title="Cliff Movie DB"
+          title="VenusFOODCOURT Movie DB"
           iconElementLeft={<img src="https://s3.amazonaws.com/tt-public-assets/Cliff_icon.png" alt="Logo" />}
-          iconElementRight={buttons} 
+          iconElementRight={buttons}
         />
         <div className="viewChanger"> {this.renderView()} </div>
       </div>
