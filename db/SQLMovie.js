@@ -265,6 +265,9 @@ function findMovie({ tmdbId }) {
         raw: true
       })
         .then((movie) => {
+          if (!movie) {
+            return Promise.resolve(undefined);
+          }
           let promises = [];
           promises.push(GenresMovies.findAll({
             where: {movieId: movie.id},

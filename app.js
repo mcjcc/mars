@@ -211,7 +211,7 @@ app.get('/movie/:tmdbId', async (req, res) => {
     results.genres = movieData.genres.map(genre => genre.name);
     results.budget = movieData.budget;
     results.revenue = movieData.revenue;
-    // resutlts.estimatedProfit =
+    results.estimatedProfit = results.revenue - results.budget;
     results.releaseDate = movieData.release_date;
     results.images = images;
     results.trailerKey = trailerKeys[0]; //  use first trailer video key
