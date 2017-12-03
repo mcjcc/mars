@@ -24,6 +24,8 @@ class FrontPage extends React.Component {
     this.renderView = this.renderView.bind(this);
   }
 
+  
+
   changeView(option, imageElement ) {
     if (option && imageElement) {
       this.setState({

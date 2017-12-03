@@ -33,8 +33,8 @@ const Movies = db.define('movies', {
   revenue: Sequelize.INTEGER,
   estimatedProfit: Sequelize.INTEGER,
   releaseDate: Sequelize.DATE,
-  trailerKey: Sequelize.STRING
-  overView: Sequelize.STRING(1234)
+  trailerKey: Sequelize.STRING,
+  overview: Sequelize.STRING(1234)
   // searchTime: Sequelize.DATE
 });
 
@@ -187,7 +187,8 @@ function insertMovie(movie) {
     revenue: movie.revenue,
     estimatedProfit: movie.estimatedProfit,
     releaseDate: movie.releaseDate,
-    trailerKey: movie.trailerKey
+    trailerKey: movie.trailerKey, 
+    overview: movie.overview
 
   }).then((newMovie) => {
     let promises = [];
@@ -441,6 +442,39 @@ function insertFavorite(username, movieId) {
 
 module.exports.UserProfile = {findRecentMovies, getProfile, insertProfile, updatePicture, updateAboutMe };
 module.exports.Movie = { insertMovie, findMovie };
+// function getMovieTableData(callback) {
+//   return Movies.findAll()
+//     .then(function(result) {
+//       console.log('releaseDateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', result);
+//       return Images.findAll({
+//         where: {
+//           movieId: result.id
+//         }
+//       })
+//       .then(function(imagesArrays) {
+//         callback(null, imagesArrays);
+//       })
+//       .catch(function(err){
+//         console.log('err is', err);
+//       })
+      
+//       console.log('the result of finding everything in the movie table is  ', result);
+//     })
+//     .catch(function(err) {
+//       callback(err, null);
+//       console.log('following error has occured while retrieving data from the  movie table', err);
+//     })
+// }
+
+// getMovieTableData(function(err, result){
+//   if (err) {
+//     console.log('following errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr in getMovieTableData', err);
+//   } else {
+//     console.log('resulttttttttttttttttttttttttttttttttttttttttttttttttt', result);
+//   }
+// });
+//module.exports.UserProfile = { getProfile, insertProfile, updatePicture, updateAboutMe };
+
 
 // promises.push(GenresMovies.create)
 

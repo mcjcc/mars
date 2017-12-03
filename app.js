@@ -127,6 +127,16 @@ app.post('/update/aboutme/:username', (req, res) => {
     });
 });
 
+app.get('/movies', (req, res) => {
+  Movie.findAll()
+    .then(function(results){
+      console.log('here is the current stuff in the movie table', results);
+    })
+    .catch(function(err) {
+      console.log('following error has occured while retrieving data from movie table', err);
+    })
+});
+
 app.post('/update/picture/:username', (req, res) => {
   const { username } = req.params;
   console.log('WWWWWWWWWW', username);
@@ -214,6 +224,7 @@ app.get('/movie/:tmdbId', async (req, res) => {
     results.estimatedProfit = results.revenue - results.budget;
     results.releaseDate = movieData.release_date;
     results.images = images;
+    results.overview = movieData.overview;
     results.trailerKey = trailerKeys[0]; //  use first trailer video key
     //results.searchTime = moment.now()
 
