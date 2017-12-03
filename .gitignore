@@ -30,3 +30,5 @@ bower_components/
 
 .env
 public/bundle.js
+config/AWS.js
+temp/
