@@ -58,7 +58,6 @@ class NowPlaying extends Component {
   }
 
   fetchPrimaryMovie(id) {
-    this.setState({ primaryMovieList: [] });
     this.props.fetchMovie1(id);
   }
 
