@@ -63,3 +63,7 @@ body {
 .card-tile {
   cursor: pointer;
 }
+
+.main-logo {
+  width: 100px;
+}

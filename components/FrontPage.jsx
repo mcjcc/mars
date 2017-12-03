@@ -69,7 +69,7 @@ class FrontPage extends React.Component {
       <div>
         <AppBar
           title="VenusFOODCOURT Movie DB"
-          iconElementLeft={<img src="https://s3.amazonaws.com/tt-public-assets/Cliff_icon.png" alt="Logo" />}
+          iconElementLeft={<img src="https://s3-us-west-1.amazonaws.com/venusfoodcourt/moviedb/Moon_Venus_logo.png" alt="Logo" className="main-logo"/>}
           iconElementRight={buttons}
         />
         <div className="viewChanger"> {this.renderView()} </div>
