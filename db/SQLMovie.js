@@ -35,8 +35,6 @@ const Movies = db.define('movies', {
   releaseDate: Sequelize.DATE,
   trailerKey: Sequelize.STRING
   // searchTime: Sequelize.DATE
-}, {
-  timestamps: false,
 });
 
 const ProductionCompanies = db.define('production_companies', {
@@ -257,6 +255,46 @@ function insertMovie(movie) {
 //   trendData: [{formattedAxisTime: 'hi', value: 5}, {formattedAxisTime: 'hello', value: 6}]
 // });
 
+
+function findRecentMovies() {
+  return db.sync()
+    .then(() => {
+      return Movies.findAll({
+        raw: true,
+        limit: 10,
+        order: [['updatedAt', 'DESC']],
+      })
+        .then((movies) => {
+          var findImage = (i) => {
+            return Images.findAll({
+              where: {movieId: movies[i].id},
+              raw: true,
+            })
+              .then((images) => {
+                movies[i].images = images;
+                return movies[i];
+              })
+          }
+          var promises = [];
+          for (var i = 0; i < movies.length; i++) {
+            promises.push(findImage(i));
+          }
+          return Promise.all(promises);
+        });
+    });
+}
+
+console.log('FIND RECENT MOVIES');
+findRecentMovies({tmdbId: 1})
+  .then((movies) => {
+    console.log('WWWWWWWWWWWWWWWWWW');
+    console.log(movies[0].images[0]);
+  })
+
+
+
+
+
 function findMovie({ tmdbId }) {
   return db.sync()
     .then(() => {
@@ -265,6 +303,9 @@ function findMovie({ tmdbId }) {
         raw: true
       })
         .then((movie) => {
+          if (!movie) {
+            return Promise.resolve(undefined);
+          }
           let promises = [];
           promises.push(GenresMovies.findAll({
             where: {movieId: movie.id},
@@ -397,12 +438,7 @@ function insertFavorite(username, movieId) {
     });
 }
 
-getFavorites('Brendon Verch')
-  .then((movies) => {
-    console.log('WWWWWWWWWWWWW', movies);
-  });
-
-module.exports.UserProfile = { getProfile, insertProfile, updatePicture, updateAboutMe };
+module.exports.UserProfile = {findRecentMovies, getProfile, insertProfile, updatePicture, updateAboutMe };
 module.exports.Movie = { insertMovie, findMovie };
 
 // promises.push(GenresMovies.create)

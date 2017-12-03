@@ -1,5 +1,8 @@
 import React from 'react';
 import SearchBox from '../containers/SearchBox';
+import Login from '../containers/Login';
+import Signup from '../containers/Signup';
+import Profile from '../containers/Profile';
 import MovieDetail from '../containers/MovieDetail';
 import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
@@ -48,7 +51,19 @@ class FrontPage extends React.Component {
       return (
         <TileImageView  item={this.state.tile}/>
       );
-    } else {
+    } else if (currentView === 'login') {
+      return (
+        <Login />
+      );
+    } else if (currentView === 'signup') {
+      return (
+        <Signup />
+      );
+    } else if (currentView === 'profile') {
+      return (
+        <Profile />
+      );
+    }   else {
       return <div className= "grids-container">
       {this.state.data.map(function (item, index) {
           return <FrontPageGridListView key={item.tmdbId} element={item} viewChanger={this.changeView}/> ;
@@ -62,6 +77,9 @@ class FrontPage extends React.Component {
         <div>
           <RaisedButton label="Home" className="mainPage" onClick={() => this.changeView('MainPage')}/>
           <RaisedButton label="Search" className="search" onClick={() => this.changeView('search')} />
+          <RaisedButton label="Login" className="login" onClick={() => this.changeView('login')} />
+          <RaisedButton label="Signup" className="signup" onClick={() => this.changeView('signup')} />
+          <RaisedButton label="Profile" className="profile" onClick={() => this.changeView('profile')} />
         </div>
       );
 
