@@ -34,6 +34,7 @@ const Movies = db.define('movies', {
   estimatedProfit: Sequelize.INTEGER,
   releaseDate: Sequelize.DATE,
   trailerKey: Sequelize.STRING
+  overView: Sequelize.STRING(1234)
   // searchTime: Sequelize.DATE
 });
 
