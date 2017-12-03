@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import Paper from 'material-ui/Paper';
@@ -10,6 +8,8 @@ import axios from 'axios';
 import SearchBar from '../components/SearchBar';
 import MovieList from '../components/MovieList';
 import { fetchMovie1, fetchMovie2 } from '../actions/MovieAction';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 class SearchBox extends Component {
   constructor() {

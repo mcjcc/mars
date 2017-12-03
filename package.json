@@ -13,8 +13,10 @@
     "heroku-postbuild": "npm install --only=dev --dev && webpack -p --config ./webpack.config.js --progress"
   },
   "dependencies": {
+    "aws-sdk": "^2.162.0",
     "axios": "^0.17.1",
     "express": "^4.16.2",
+    "formidable": "^1.1.1",
     "google-trends-api": "^4.3.0",
     "material-auto-rotating-carousel": "^1.7.0",
     "material-ui": "^0.19.4",

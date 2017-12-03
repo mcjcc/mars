@@ -1,6 +1,22 @@
 const Sequelize = require('sequelize');
 const db = require('./SQLindex.js');
 
+const UserProfile = db.define('profile', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  username: {
+    type: Sequelize.STRING,
+    unique: true,
+  },
+  password: Sequelize.STRING,
+  aboutme: Sequelize.STRING,
+  picture: Sequelize.STRING,
+});
+
+
 const Movies = db.define('movies', {
   id: {
     type: Sequelize.INTEGER,
@@ -123,6 +139,23 @@ const TrendData = db.define('trend_data', {
 Movies.hasMany(TrendData);
 TrendData.belongsTo(Movies);
 
+const Favorites = db.define('favorites', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+}, {
+  timestamps: false,
+});
+
+UserProfile.belongsToMany(Movies, {
+  through: Favorites,
+});
+Movies.belongsToMany(UserProfile, {
+  through: Favorites,
+});
+
 db.sync();
 
 
@@ -230,7 +263,7 @@ function findMovie({ tmdbId }) {
         raw: true
       })
         .then((movie) => {
-          var promises = [];
+          let promises = [];
           promises.push(GenresMovies.findAll({
             where: {movieId: movie.id},
             raw: true
@@ -307,8 +340,68 @@ function findMovie({ tmdbId }) {
       });
 }
 
-module.exports.insertMovie = insertMovie;
-module.exports.findMovie = findMovie;
+function insertProfile(newProfile) {
+  return UserProfile.create(newProfile);
+}
+
+function updatePicture(newPicture, username) {
+  return UserProfile.update({picture: newPicture}, { where: {username: username} });
+}
+
+function updateAboutMe(newAboutMe, username) {
+  console.log('WWWWWWWWWWWWWWWWWWWWWWW', newAboutMe, username);
+  return UserProfile.update({aboutme: newAboutMe}, { where: {username: username} });
+}
+
+function getProfile(username) {
+  return db.sync()
+    .then(() => {
+      return UserProfile.findOne({
+        where: {username: username},
+        raw: true
+      });
+    });
+}
+
+function getFavorites(username) {
+  return db.sync()
+    .then(() => {
+      return getProfile(username)
+        .then((profile) => {
+          //get movie id from favorites
+          return Favorites.findAll({
+            where: {profileId: profile.id},
+            raw: true
+          })
+            .then((favorites) => {
+              let promises = [];
+              for (var i = 0; i < favorites.length; i++) {
+                promises.push(Movies.findOne({
+                  where: {id: favorites[i].movieId},
+                  raw: true
+                }));
+              }
+              return Promise.all(promises);
+              console.log('FAVORITES ARE', favorites);
+            });
+        });
+    });
+}
+
+function insertFavorite(username, movieId) {
+  return getProfile(username)
+    .then((profile) => {
+      return Favorites.create({profileId: profile.id, movieId: movieId});
+    });
+}
+
+getFavorites('Brendon Verch')
+  .then((movies) => {
+    console.log('WWWWWWWWWWWWW', movies);
+  });
+
+module.exports.UserProfile = { getProfile, insertProfile, updatePicture, updateAboutMe };
+module.exports.Movie = { insertMovie, findMovie };
 
 // promises.push(GenresMovies.create)
 
