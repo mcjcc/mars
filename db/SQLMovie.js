@@ -415,6 +415,9 @@ function isFavorite(username, tmdbId) {
                 raw: true
               })
                 .then((movie) => {
+                  if (!movie) {
+                    return false;
+                  }
                   console.log('FOUND MOVIE');
                   var found = false;
                   for (var i = 0; i < favorites.length; i++) {

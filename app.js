@@ -68,14 +68,12 @@ app.get('/profile/:username/:password', (req, res) => {
   const { username, password } = req.params;
   UserProfile.getProfile(username)
     .then((profile) => {
-      if (profile.password === password) {
-        UserProfile.getFavorites(username)
-          .then((favorites) => {
-            profile.favorites = favorites;
-            console.log('SENDING BACK PROFILE: ', profile);
-            res.send(profile);
-          })
-      }
+      UserProfile.getFavorites(username)
+        .then((favorites) => {
+          profile.favorites = favorites;
+          console.log('SENDING BACK PROFILE: ', profile);
+          res.send(profile);
+        })
     })
     .catch((err) => {
       res.send(err);

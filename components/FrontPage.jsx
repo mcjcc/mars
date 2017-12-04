@@ -14,6 +14,7 @@ import $ from 'jquery';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { logout } from '../actions/MovieAction';
+import axios from 'axios';
 
 class FrontPage extends React.Component {
   constructor(){
@@ -21,14 +22,59 @@ class FrontPage extends React.Component {
     this.state = {
       view: 'MainPage',
       tile: '',
-      data: sampleData
+      data: sampleData,
+      primaryFavorite: false,
+      secondaryFavorite: false,
     };
+    this.getFavorite = this.getFavorite.bind(this);
+    this.setFavorite = this.setFavorite.bind(this);
     this.changeView = this.changeView.bind(this);
     this.renderView = this.renderView.bind(this);
     this.renderButtons = this.renderButtons.bind(this);
   }
 
+  setFavorite(movie, val) {
+    if (movie === 'movie1') {
+      this.setState({primaryMovie: val});
+    } else if (movie === 'movie2') {
+      this.setState({secondaryMovie: val});
+    }
+  }
+
+  getFavorite() {
+    if (this.props.profile.username && this.props.primaryMovie) {
+      axios.get(`/favorite/${this.props.profile.username}/${this.props.primaryMovie.tmdbId}`)
+        .then((response) => {
+          this.setState({ primaryFavorite: response.data });
+        })
+        .catch(err => console.error(err));
+    }
+    if (this.props.profile.username && this.props.secondaryMovie) {
+      axios.get(`/favorite/${this.props.profile.username}/${this.props.secondaryMovie.tmdbId}`)
+        .then((response) => {
+          this.setState({ secondaryMovie: response.data });
+        })
+        .catch(err => console.error(err));
+    }
+  }
+
   changeView(option, imageElement ) {
+    console.log('OPTIONS IS: ', option);
+    if (option === 'MainPage') {
+      console.log('COMPONENT DID MOUNT');
+      $.ajax({
+        type: 'GET',
+        url: 'movies/data',
+        success: (data) => {
+          this.setState({
+            data: data
+          });
+        }, 
+        error: (err) => {
+          console.log('this is the error in ajax', err);
+        }
+      });
+    }
     if (option === 'logout') {
       this.props.logout();
       this.setState({
@@ -50,9 +96,10 @@ class FrontPage extends React.Component {
   }
 
   componentDidMount() {
+    console.log('COMPONENT DID MOUNT');
     $.ajax({
+      type: 'GET',
       url: 'movies/data', 
-      data: 'data',
       success: (data) => {
         this.setState({
           data: data
@@ -69,8 +116,8 @@ class FrontPage extends React.Component {
     if (currentView === 'search') {
       return (
         <div>
-          <NowPlaying />
-          <SearchBox />
+          <NowPlaying setFavorite={this.setFavorite} getFavorite={this.getFavorite} secondaryFavorite={this.state.secondaryFavorite} primaryFavorite={this.state.primaryFavorite}/>
+          <SearchBox setFavorite={this.setFavorite} getFavorite={this.getFavorite} secondaryFavorite={this.state.secondaryFavorite} primaryFavorite={this.state.primaryFavorite}/>
           <MovieDetail />
         </div>
       );
@@ -139,7 +186,7 @@ class FrontPage extends React.Component {
     return (
       <div>
         <AppBar
-          title="VenusFOODCOURT Movie DB"
+          title="VenusMOVIECOURT DB"
           iconElementLeft={<img src="https://s3-us-west-1.amazonaws.com/venusfoodcourt/moviedb/Moon_Venus_logo.png" alt="Logo" className="main-logo"/>}
           iconElementRight={this.renderButtons()}
         />
@@ -149,8 +196,8 @@ class FrontPage extends React.Component {
   }
 }
 
-function mapStateToProps({ profile }) {
-  return { profile };
+function mapStateToProps({ profile, primaryMovie, secondaryMovie }) {
+  return { profile, primaryMovie, secondaryMovie };
 }
 
 function mapDispatchToProps(dispatch) {

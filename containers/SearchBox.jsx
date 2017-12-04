@@ -41,34 +41,19 @@ class SearchBox extends Component {
   }
 
   componentDidMount() {
-    if (this.props.profile.username && this.props.primaryMovie) {
-      axios.get(`/favorite/${this.props.profile.username}/${this.props.primaryMovie.tmdbId}`)
-        .then((response) => {
-          this.setState({ primaryFavorite: response.data });
-        })
-        .catch(err => console.error(err));
-    }
-    if (this.props.profile.username && this.props.secondaryMovie) {
-      axios.get(`/favorite/${this.props.profile.username}/${this.props.secondaryMovie.tmdbId}`)
-        .then((response) => {
-          this.setState({ secondaryMovie: response.data });
-        })
-        .catch(err => console.error(err));
-    }
+    this.props.getFavorite();
   }
 
   renderFavorite(favorite) {
     let tmdbId;
     if (favorite === 'favorite1') {
-      console.log('FAVORITE1');
-      console.log(this.state.primaryFavorite);
-      if (this.state.primaryFavorite) {
+      if (this.props.primaryFavorite) {
         return (
           <Star color="white" />
         )
       }
     } else if (favorite === 'favorite2') {
-      if (this.state.secondaryFavorite) {
+      if (this.props.secondaryFavorite) {
         return (
           <Star color="white" />
         )
@@ -82,6 +67,7 @@ class SearchBox extends Component {
   }
 
   onFavoritesClick(movie) {
+    console.log('CLICKED', movie);
     let tmdbId;
     if (movie === 'movie1') {
       tmdbId = this.props.primaryMovie.tmdbId;
@@ -93,11 +79,13 @@ class SearchBox extends Component {
         //dispatch
         //this.props.getFavorites()
         if (movie === 'movie1') {
-          this.setState({primaryFavorite: true});
+          this.props.setFavorite('movie1', true);
+          this.props.getFavorite();
         } else if (movie === 'movie2') {
-          this.setState({secondaryFavorite: true});
+          this.props.setFavorite('movie2', true);
+          this.props.getFavorite();
         }
-        this.props.fetchProfile(this.props.profile.username);
+        this.props.fetchProfile(this.props.profile.username, this.props.profile.password);
         console.log('FAVORITE', response);
       });
   }
@@ -116,9 +104,15 @@ class SearchBox extends Component {
     this.props.fetchMovie1(id)
       .then(() =>{
         if (this.props.profile.username) {
-          axios.get(`/favorite/${this.props.profile.username}/${id}`)
+          if (!this.props.primaryMovie.tmdbId) {
+            this.props.setFavorite('movie1', false);
+            this.props.getFavorite();
+            return;
+          }
+          axios.get(`/favorite/${this.props.profile.username}/${this.props.primaryMovie.tmdbId}`)
             .then((response) => {
-              this.setState({ primaryFavorite: response });
+              this.props.setFavorite('movie1', response.data);
+              this.props.getFavorite();
             })
             .catch(err => console.error(err));
         }
@@ -130,9 +124,15 @@ class SearchBox extends Component {
     this.props.fetchMovie2(id)
       .then(() =>{
         if (this.props.profile.username) {
-          axios.get(`/favorite/${this.props.profile.username}/${id}`)
+          if (!this.props.secondaryMovie.tmdbId) {
+            this.props.setFavorite('movie2', false);
+            this.props.getFavorite();
+            return;
+          }
+          axios.get(`/favorite/${this.props.profile.username}/${this.props.secondaryMovie.tmdbId}`)
             .then((response) => {
-              this.setState({ secondaryFavorite: response });
+              this.props.setFavorite('movie2', response.data);
+              this.props.getFavorite();
             })
             .catch(err => console.error(err));
         }

@@ -38,8 +38,7 @@ class Profile extends React.Component {
     
     axios.post(`/update/picture/${this.props.profile.username}`, formData)
       .then((response) => {
-        console.log(response);
-        this.props.fetchProfile(this.props.profile.username);
+        this.props.fetchProfile(this.props.profile.username, this.props.profile.password);
       })
       .catch((error) => {
         console.log('Error in update picture: ', error);
@@ -57,6 +56,7 @@ class Profile extends React.Component {
     console.log('CLICKED FAVORITE TMDB', tmdbId);
     this.props.fetchMovie1(tmdbId);
     this.props.changeView('search');
+    this.props.setFavorite();
   }
 
   onAboutMeClick(e) {
@@ -75,7 +75,7 @@ class Profile extends React.Component {
       axios.post(`/update/aboutme/${this.props.profile.username}`, { aboutme: this.state.text })
         .then((response) => {
           console.log('LETS FETCH THE PROFILE');
-          this.props.fetchProfile(this.props.profile.username);
+          this.props.fetchProfile(this.props.profile.username, this.props.profile.password);
         })
         .catch(err => console.error(err));
 
