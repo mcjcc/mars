@@ -6,13 +6,15 @@ import FlatButton from 'material-ui/FlatButton';
 import axios from 'axios';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import { fetchProfile } from '../actions/MovieAction';
+import { fetchMovie1, fetchProfile } from '../actions/MovieAction';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {GridList, GridTile} from 'material-ui/GridList';
 import Dialog from 'material-ui/Dialog';
 
 import TextField from 'material-ui/TextField';
+
+const url = 'https://image.tmdb.org/t/p/w154';
 
 class Profile extends React.Component {
   constructor(props) {
@@ -36,8 +38,7 @@ class Profile extends React.Component {
     
     axios.post(`/update/picture/${this.props.profile.username}`, formData)
       .then((response) => {
-        console.log(response);
-        this.props.fetchProfile(this.props.profile.username);
+        this.props.fetchProfile(this.props.profile.username, this.props.profile.password);
       })
       .catch((error) => {
         console.log('Error in update picture: ', error);
@@ -49,6 +50,13 @@ class Profile extends React.Component {
     //   .catch((error) => {
     //     console.log('Error in update picture: ', error);
     //   });
+  }
+
+  onFavoritesClick(tmdbId) {
+    console.log('CLICKED FAVORITE TMDB', tmdbId);
+    this.props.fetchMovie1(tmdbId);
+    this.props.changeView('search');
+    this.props.setFavorite();
   }
 
   onAboutMeClick(e) {
@@ -67,7 +75,7 @@ class Profile extends React.Component {
       axios.post(`/update/aboutme/${this.props.profile.username}`, { aboutme: this.state.text })
         .then((response) => {
           console.log('LETS FETCH THE PROFILE');
-          this.props.fetchProfile(this.props.profile.username);
+          this.props.fetchProfile(this.props.profile.username, this.props.profile.password);
         })
         .catch(err => console.error(err));
 
@@ -80,7 +88,7 @@ class Profile extends React.Component {
 
   renderView() {
     if (this.state.view === 'textField') {
-      return  <div style={{borderStyle: 'solid', borderColor: 'lightBlue', borderRadius: 4, borderSize: 1}}>
+      return  <div style={{width: '320px', marginLeft: '20px', borderStyle: 'solid', borderColor: 'grey', borderRadius: 4, borderSize: 1}}>
                 <TextField
                   name="aboutme"
                   multiLine={true}
@@ -96,7 +104,7 @@ class Profile extends React.Component {
       return <div style={{overflowY: 'auto'}}>
               <p
 
-                style={{height: 100, textAlign: 'left'}}
+                style={{marginLeft: '20px', height: 100, width: 300, textAlign: 'left'}}
                 onClick={this.onAboutMeClick}
               >
                 {this.props.profile.aboutme}
@@ -107,46 +115,41 @@ class Profile extends React.Component {
 
   render() {
     return (
-      <div style={{display: 'flex', flexDirection: 'column'}}>
+      <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
         <div style={{display: 'flex'}}>
-          <div style={{width: '190px', display: 'flex', flexDirection: 'column'}}>
-            <img style={{margin: '20px', width: 150, height: 150, borderRadius: '20px', display: 'flex'}} src={this.props.profile.picture} />
-
+          <div style={{width: '300px', display: 'flex', flexDirection: 'column'}}>
+            <img style={{margin: '20px', width: 250, height: 250, borderRadius: '20px', display: 'flex'}} src={this.props.profile.picture} />
             <RaisedButton
               label="Change Picture"
               labelPosition="before"
-              style={{margin: 12}}
               containerElement="label"
             >
               <input onChange={this.handleImageChange} type="file" style={{cursor: "pointer", position: "absolute", opacity: 0}} />
             </RaisedButton>
-            <a href="">Change Password</a>
           </div>
           <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-            <h2 style={{marginLeft: '20px', marginTop: '20px', textAlign: 'left'}}>{this.props.profile.username}</h2>
-            <h2 style={{marginLeft: '20px', marginTop: '0px', textAlign: 'left'}}>About Me</h2>
-            <div className="changeView" style={{paddingLeft: 50, paddingRight: 100}}>
+            <h2 style={{marginLeft: '10px', marginTop: '20px', textAlign: 'left'}}>{this.props.profile.username}</h2>
+            <h2 style={{marginLeft: '10px', marginTop: '20px', textAlign: 'left'}}>About Me</h2>
+            <div className="changeView" style={{paddingLeft: 0, paddingRight: 50}}>
               {this.renderView()}
             </div>
           </div>
         </div>
-        <h1 style={{marginLeft: '20px', textAlign: 'left'}}>My Favorite Movies</h1>
+        <h1 style={{marginTop: '40px'}}>My Favorite Movies</h1>
         <GridList
           cellHeight={180}
-          style={{paddingLeft: '20px', width: 500, height: 450, overflowY: 'auto'}}
+          style={{display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', paddingLeft: '20px', width: 'auto', height: 450}}
         >
-        <GridTile
-          key={'http://pwlacecorgi.com/260/180'}
-          title={'Corgis'}
-        >
-          <img src="http://placecorgi.com/260/180" />
-        </GridTile>
-        <GridTile
-          key={'http://placecorgi.com/260/180'}
-          title={'Corgis'}
-        >
-          <img src="http://placecorgi.com/260/180" />
-        </GridTile>
+        {this.props.profile.favorites.map(function (favorite, index) {
+          return  <div key={favorite.tmdbId}>
+                    <GridTile
+                      title={favorite.title}
+                    >
+                      <img className='favorite-picture' onClick={() => {this.onFavoritesClick(favorite.tmdbId)}} src={url + favorite.images[0].url} />
+                    </GridTile>
+                  </div>
+                  
+        }.bind(this))}
         </GridList>
       </div>
     );
@@ -159,7 +162,7 @@ function mapStateToProps({ profile }) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchProfile }, dispatch);
+  return bindActionCreators({ fetchMovie1, fetchProfile }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

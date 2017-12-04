@@ -39,7 +39,7 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className='login-page'>
         <h1>Login</h1>
         <TextField
           hintText={"Username"}

@@ -20,7 +20,10 @@ class NowPlaying extends Component {
   }
 
   fetchPrimaryMovie(id) {
-    this.props.fetchMovie1(id);
+    this.props.fetchMovie1(id)
+      .then(() => {
+        this.props.getFavorite();
+      });
   }
 
   fetchNowPlaying() {

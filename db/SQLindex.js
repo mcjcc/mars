@@ -15,7 +15,7 @@ if (process.env.DATABASE_URL) {
   var db = new Sequelize('venusFOODCOURTMOVIEDB', 'root', '', {
     host: 'localhost',
     dialect: 'mysql',
-    logging: true
+    logging: false
   });
   con.connect(function(err) {
     if (err) throw err;

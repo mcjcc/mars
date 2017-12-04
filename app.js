@@ -68,8 +68,12 @@ app.get('/profile/:username/:password', (req, res) => {
   const { username, password } = req.params;
   UserProfile.getProfile(username)
     .then((profile) => {
-      console.log('SENDING BACK PROFILE: ', profile);
-      res.send(profile);
+      UserProfile.getFavorites(username)
+        .then((favorites) => {
+          profile.favorites = favorites;
+          console.log('SENDING BACK PROFILE: ', profile);
+          res.send(profile);
+        })
     })
     .catch((err) => {
       res.send(err);
@@ -87,13 +91,17 @@ app.post('/profile', (req, res) => {
           username: req.body.username,
           password: req.body.password,
           aboutme: 'Enter a description!',
-          picture: 'http://placecorgi.com/260/180'
+          picture: 'https://s3-us-west-1.amazonaws.com/venusfoodcourt/moviedb/Moon_Venus_logo.png',
         })
           .then(() => {
             UserProfile.getProfile(req.body.username)
               .then((profile) => {
-                console.log('SENDING BACK', profile);
-                res.send(profile);
+                UserProfile.getFavorites(req.body.username)
+                  .then((favorites) => {
+                    profile.favorites = favorites;
+                    console.log('SENDING BACK PROFILE: ', profile);
+                    res.send(profile);
+                  });
               });
           });
       }
@@ -113,6 +121,28 @@ app.post('/profile', (req, res) => {
   //   .catch((err) => {
   //     res.send(err);
   //   });
+});
+
+app.get('/favorite/:username/:tmdbId', (req, res) => {
+  const { username, tmdbId } = req.params;
+  console.log('REQUESTSPARAMES', req.params);
+  UserProfile.isFavorite(username, tmdbId)
+    .then((favorite) => {
+      console.log('FAVORITE IS: ', favorite);
+      res.send(favorite);
+    });
+});
+
+app.post('/update/favorite/:username', (req, res) => {
+  const { username } = req.params;
+  console.log('USERNAME', username, 'BODY', req.body);
+  UserProfile.insertFavorite(username, req.body.tmdbId)
+    .then(() => {
+      res.send('movie favorited');
+    })
+    .catch ((err) => {
+      res.send(err);
+    });
 });
 
 app.post('/update/aboutme/:username', (req, res) => {

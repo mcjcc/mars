@@ -8,8 +8,17 @@ body {
   height: 100%;
 }
 
+.login-page {
+  margin-top: 20px;
+  height: 100%;
+}
+
 .input-group {
   margin: 25px;
+}
+
+.favorite-picture:hover {
+  cursor: pointer;
 }
 
 .recharts-wrapper {

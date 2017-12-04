@@ -1,4 +1,4 @@
-import { CREATE_PROFILE, FETCH_PROFILE } from '../actions/MovieAction';
+import { LOGOUT, CREATE_PROFILE, FETCH_PROFILE } from '../actions/MovieAction';
 
 export default function (state = {}, action) {
   // if (action.payload) {
@@ -9,6 +9,8 @@ export default function (state = {}, action) {
       return action.payload.data;
     case CREATE_PROFILE:
       return action.payload.data ? action.payload.data: state;
+    case LOGOUT:
+      return {};
     default:
       return state;
   }

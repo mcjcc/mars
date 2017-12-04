@@ -286,15 +286,6 @@ function findRecentMovies() {
     });
 }
 
-console.log('FIND RECENT MOVIES');
-findRecentMovies({tmdbId: 1})
-  .then((movies) => {
-    console.log('WWWWWWWWWWWWWWWWWW');
-    console.log(movies[0].images);
-  })
-
-
-
 
 
 function findMovie({ tmdbId }) {
@@ -408,6 +399,40 @@ function getProfile(username) {
     });
 }
 
+function isFavorite(username, tmdbId) {
+  return db.sync()
+    .then(() => {
+      return getProfile(username)
+        .then((profile) => {
+          return Favorites.findAll({
+            where: {profileId: profile.id},
+            raw: true
+          })
+            .then((favorites) => {
+              console.log('FOUND FAVORITES');
+              return Movies.findOne({
+                where: { tmdbId: tmdbId },
+                raw: true
+              })
+                .then((movie) => {
+                  if (!movie) {
+                    return false;
+                  }
+                  console.log('FOUND MOVIE');
+                  var found = false;
+                  for (var i = 0; i < favorites.length; i++) {
+                    console.log('TTTTTTT', i, favorites[i].movieId, movie.id);
+                    if (favorites[i].movieId === movie.id) {
+                      found = true;
+                    }
+                  }
+                  return found;
+                })
+            })
+        });
+    });
+}
+
 function getFavorites(username) {
   return db.sync()
     .then(() => {
@@ -424,23 +449,42 @@ function getFavorites(username) {
                 promises.push(Movies.findOne({
                   where: {id: favorites[i].movieId},
                   raw: true
-                }));
+                })
+                  .then((movie) => {
+                    console.log('JIGJIEJIGJ', i);
+                    return Images.findOne({
+                      where: {movieId: movie.id},
+                      raw: true
+                    })
+                      .then((image) => {
+                        movie.images = [image];
+                        console.log('WWWEEEGEGAGE', image);
+                        return movie;
+                      });
+                  })
+                );
               }
-              return Promise.all(promises);
               console.log('FAVORITES ARE', favorites);
+              return Promise.all(promises);
             });
         });
     });
 }
 
-function insertFavorite(username, movieId) {
+function insertFavorite(username, tmdbId) {
+  console.log('INSERT FAVORITE', tmdbId);
   return getProfile(username)
     .then((profile) => {
-      return Favorites.create({profileId: profile.id, movieId: movieId});
+      return Movies.findOne({
+        where: { tmdbId: tmdbId }
+      })
+        .then((movie) => {
+          return Favorites.create({profileId: profile.id, movieId: movie.id});
+        })
     });
 }
 
-module.exports.UserProfile = {findRecentMovies, getProfile, insertProfile, updatePicture, updateAboutMe };
+module.exports.UserProfile = { isFavorite, getFavorites, insertFavorite, findRecentMovies, getProfile, insertProfile, updatePicture, updateAboutMe };
 module.exports.Movie = { insertMovie, findMovie };
 // function getMovieTableData(callback) {
 //   return Movies.findAll()

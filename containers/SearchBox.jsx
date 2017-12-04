@@ -7,15 +7,21 @@ import { cyan100 } from 'material-ui/styles/colors';
 import axios from 'axios';
 import SearchBar from '../components/SearchBar';
 import MovieList from '../components/MovieList';
-import { fetchMovie1, fetchMovie2 } from '../actions/MovieAction';
+import { fetchProfile, fetchMovie1, fetchMovie2 } from '../actions/MovieAction';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
+import IconButton from 'material-ui/IconButton';
+import StarBorder from 'material-ui/svg-icons/toggle/star-border';
+import Star from 'material-ui/svg-icons/toggle/star';
 
 class SearchBox extends Component {
   constructor() {
     super();
 
     this.state = {
+      primaryFavorite: false,
+      secondaryFavorite: false,
       primaryMovieList: [],
       secondaryMovieList: [],
     };
@@ -27,9 +33,61 @@ class SearchBox extends Component {
     this.imgUrl = 'https://image.tmdb.org/t/p/w92';
     this.chipColor = cyan100;
 
+    this.renderFavorite = this.renderFavorite.bind(this);
+    this.onFavoritesClick = this.onFavoritesClick.bind(this);
     this.onMovieSearch = this.onMovieSearch.bind(this);
     this.fetchPrimaryMovie = this.fetchPrimaryMovie.bind(this);
     this.fetchSecondaryMovie = this.fetchSecondaryMovie.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.getFavorite();
+  }
+
+  renderFavorite(favorite) {
+    let tmdbId;
+    if (favorite === 'favorite1') {
+      if (this.props.primaryFavorite) {
+        return (
+          <Star color="white" />
+        )
+      }
+    } else if (favorite === 'favorite2') {
+      if (this.props.secondaryFavorite) {
+        return (
+          <Star color="white" />
+        )
+      }
+    }
+
+
+    return (
+        <StarBorder color="white" />
+      );
+  }
+
+  onFavoritesClick(movie) {
+    console.log('CLICKED', movie);
+    let tmdbId;
+    if (movie === 'movie1') {
+      tmdbId = this.props.primaryMovie.tmdbId;
+    } else if (movie === 'movie2') {
+      tmdbId = this.props.secondaryMovie.tmdbId;
+    }
+    axios.post(`/update/favorite/${this.props.profile.username}`, { tmdbId: tmdbId })
+      .then((response) => {
+        //dispatch
+        //this.props.getFavorites()
+        if (movie === 'movie1') {
+          this.props.setFavorite('movie1', true);
+          this.props.getFavorite();
+        } else if (movie === 'movie2') {
+          this.props.setFavorite('movie2', true);
+          this.props.getFavorite();
+        }
+        this.props.fetchProfile(this.props.profile.username, this.props.profile.password);
+        console.log('FAVORITE', response);
+      });
   }
 
   onMovieSearch(query, type) {
@@ -43,12 +101,42 @@ class SearchBox extends Component {
 
   fetchPrimaryMovie(id) {
     this.setState({ primaryMovieList: [] });
-    this.props.fetchMovie1(id);
+    this.props.fetchMovie1(id)
+      .then(() =>{
+        if (this.props.profile.username) {
+          if (!this.props.primaryMovie.tmdbId) {
+            this.props.setFavorite('movie1', false);
+            this.props.getFavorite();
+            return;
+          }
+          axios.get(`/favorite/${this.props.profile.username}/${this.props.primaryMovie.tmdbId}`)
+            .then((response) => {
+              this.props.setFavorite('movie1', response.data);
+              this.props.getFavorite();
+            })
+            .catch(err => console.error(err));
+        }
+      });
   }
 
   fetchSecondaryMovie(id) {
     this.setState({ secondaryMovieList: [] });
-    this.props.fetchMovie2(id);
+    this.props.fetchMovie2(id)
+      .then(() =>{
+        if (this.props.profile.username) {
+          if (!this.props.secondaryMovie.tmdbId) {
+            this.props.setFavorite('movie2', false);
+            this.props.getFavorite();
+            return;
+          }
+          axios.get(`/favorite/${this.props.profile.username}/${this.props.secondaryMovie.tmdbId}`)
+            .then((response) => {
+              this.props.setFavorite('movie2', response.data);
+              this.props.getFavorite();
+            })
+            .catch(err => console.error(err));
+        }
+      });
   }
 
   render() {
@@ -68,10 +156,14 @@ class SearchBox extends Component {
           fetchMovie={this.fetchPrimaryMovie}
         />}
         {!hasPrimaryMovieList && primaryMovie.title &&
-        <Chip style={{ margin: 'auto' }} backgroundColor={this.chipColor}>
-          <Avatar src={this.imgUrl + primaryMovie.images[0]} />
-          {primaryMovie.title}
-        </Chip>}
+        <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'row'}}>
+          <Chip style={{ margin: '0px' }} backgroundColor={this.chipColor}>
+            <Avatar src={this.imgUrl + primaryMovie.images[0]} />
+            {primaryMovie.title}
+          </Chip>
+          <IconButton onClick={() => {this.onFavoritesClick('movie1')}} style={{width: 32, height: 32, padding: '0px'}}>{this.renderFavorite('favorite1')}</IconButton>
+        </div>
+        }
         {primaryMovie.title &&
         <SearchBar
           onMovieSearch={this.onMovieSearch}
@@ -84,10 +176,14 @@ class SearchBox extends Component {
           fetchMovie={this.fetchSecondaryMovie}
         />}
         {!hasSecondaryMovieList && secondaryMovie.title &&
-        <Chip style={{ margin: 'auto' }} backgroundColor={this.chipColor}>
-          <Avatar src={this.imgUrl + secondaryMovie.images[0]} />
-          {secondaryMovie.title}
-        </Chip>}
+        <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'row'}}>
+          <Chip style={{ margin: '0px' }} backgroundColor={this.chipColor}>
+            <Avatar src={this.imgUrl + secondaryMovie.images[0]} />
+            {secondaryMovie.title}
+          </Chip>
+          <IconButton onClick={() => {this.onFavoritesClick('movie2')}} style={{width: 32, height: 32, padding: '0px'}}>{this.renderFavorite('favorite2')}</IconButton>
+        </div>
+        }
       </Paper>
     );
   }
@@ -106,12 +202,12 @@ SearchBox.propTypes = {
   }).isRequired,
 };
 
-function mapStateToProps({ primaryMovie, secondaryMovie }) {
-  return { primaryMovie, secondaryMovie };
+function mapStateToProps({ profile, primaryMovie, secondaryMovie }) {
+  return { profile, primaryMovie, secondaryMovie };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchMovie1, fetchMovie2 }, dispatch);
+  return bindActionCreators({ fetchProfile, fetchMovie1, fetchMovie2 }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchBox);

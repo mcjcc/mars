@@ -8,6 +8,7 @@ class TileView extends React.Component {
   }
 
   render() {
+    console.log('RENDER IN TILEVIEW', this.props.item[0]);
     var releaseDate = this.props.item[0].releaseDate.slice(0, 10);
     var moneyValidator = function(value) {
       if (value) {

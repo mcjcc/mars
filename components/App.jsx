@@ -6,7 +6,6 @@ import SearchBox from '../containers/SearchBox';
 import MovieDetail from '../containers/MovieDetail';
 import NowPlaying from '../containers/NowPlaying';
 
-
 export default function App() {
   return (
     <Paper>
