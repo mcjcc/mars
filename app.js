@@ -127,6 +127,16 @@ app.post('/update/aboutme/:username', (req, res) => {
     });
 });
 
+app.get('/movies/data', (req, res) => {
+  UserProfile.findRecentMovies()
+    .then(function(results){
+      res.status(200).send(results);
+    })
+    .catch(function(err) {
+      res.status(400).send(err);
+    })
+});
+
 app.post('/update/picture/:username', (req, res) => {
   const { username } = req.params;
   console.log('WWWWWWWWWW', username);
@@ -214,6 +224,7 @@ app.get('/movie/:tmdbId', async (req, res) => {
     results.estimatedProfit = results.revenue - results.budget;
     results.releaseDate = movieData.release_date;
     results.images = images;
+    results.overview = movieData.overview;
     results.trailerKey = trailerKeys[0]; //  use first trailer video key
     //results.searchTime = moment.now()
 

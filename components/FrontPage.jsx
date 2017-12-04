@@ -10,7 +10,7 @@ import FrontPageGridListView from './FrontPageMovieGridList';
 import TileImageView from './TileView';
 import sampleData from './sampleData';
 import NowPlaying from '../containers/NowPlaying';
-
+import $ from 'jquery';
 
 class FrontPage extends React.Component {
   constructor(){
@@ -35,6 +35,21 @@ class FrontPage extends React.Component {
         view: option
       });
     }
+  }
+
+  componentDidMount() {
+    $.ajax({
+      url: 'movies/data', 
+      data: 'data',
+      success: (data) => {
+        this.setState({
+          data: data
+        });
+      }, 
+      error: (err) => {
+        console.log('this is the error in ajax', err);
+      }
+    });
   }
 
   renderView() {
@@ -64,6 +79,7 @@ class FrontPage extends React.Component {
         <Profile />
       );
     }   else {
+
       return <div className= "grids-container">
       {this.state.data.map(function (item, index) {
           return <FrontPageGridListView key={item.tmdbId} element={item} viewChanger={this.changeView}/> ;
