@@ -15,7 +15,7 @@ class GridList extends React.Component {
   render() {
     return (
       <div className="grid-child" >
-        <img className="grid-child-img" src={url + this.props.element.images[0]} onClick={this.clickHandler} />
+        <img className="grid-child-img" src={url + this.props.element.images[0].url} onClick={this.clickHandler} />
       </div>
     );
   }

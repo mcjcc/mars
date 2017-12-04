@@ -23,9 +23,9 @@ body {
   height: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
   grid-gap: 10px;
-  padding: 50px;
+  padding: 30px;
 }
 
 .grid-child {
@@ -52,13 +52,23 @@ body {
 }
 
 .tile-view{
-  text-align: center;
-  height: 100%
+  display: block;
+  height: 100%;
+  width: 100%;
 }
 
 .tile-img {
-  width: 50%;
+  margin-top: 10px;
+  margin-right: auto;
+  /*display: flex;*/
+  height: 300px;
+  width: 500px;
 
+}
+.tile-img-text {
+  font-family: sans-serif;
+  margin-left: 50px;
+  margin-right: 50px;
 }
 
 .card-tile {

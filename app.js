@@ -127,13 +127,13 @@ app.post('/update/aboutme/:username', (req, res) => {
     });
 });
 
-app.get('/movies', (req, res) => {
-  Movie.findAll()
+app.get('/movies/data', (req, res) => {
+  UserProfile.findRecentMovies()
     .then(function(results){
-      console.log('here is the current stuff in the movie table', results);
+      res.status(200).send(results);
     })
     .catch(function(err) {
-      console.log('following error has occured while retrieving data from movie table', err);
+      res.status(400).send(err);
     })
 });
 

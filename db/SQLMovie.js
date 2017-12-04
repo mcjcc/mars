@@ -263,7 +263,7 @@ function findRecentMovies() {
     .then(() => {
       return Movies.findAll({
         raw: true,
-        limit: 10,
+        limit: 20,
         order: [['updatedAt', 'DESC']],
       })
         .then((movies) => {
@@ -290,7 +290,7 @@ console.log('FIND RECENT MOVIES');
 findRecentMovies({tmdbId: 1})
   .then((movies) => {
     console.log('WWWWWWWWWWWWWWWWWW');
-    console.log(movies[0].images[0]);
+    console.log(movies[0].images);
   })
 
 
