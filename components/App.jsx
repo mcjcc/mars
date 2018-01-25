@@ -6,10 +6,16 @@ import SearchBox from '../containers/SearchBox';
 import MovieDetail from '../containers/MovieDetail';
 import NowPlaying from '../containers/NowPlaying';
 
+
 export default function App() {
   return (
     <Paper>
-      <FrontPage />    
+      <AppBar
+        title="Movie DB"
+        iconElementLeft={<img src="https://s3.amazonaws.com/tt-public-assets/Cliff_icon.png" alt="Logo" />}
+      />
+      <SearchBox />
+      <MovieDetail />
     </Paper>
   );
 }
