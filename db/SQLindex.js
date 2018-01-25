@@ -12,7 +12,7 @@ if (process.env.DATABASE_URL) {
     user: 'root',
     password: ''
   });
-  var db = new Sequelize('venusFOODCOURTMOVIEDB', 'root', '', {
+  var db = new Sequelize('movieSentimentDB', 'root', '', {
     host: 'localhost',
     dialect: 'mysql',
     logging: false
@@ -20,7 +20,7 @@ if (process.env.DATABASE_URL) {
   con.connect(function(err) {
     if (err) throw err;
     console.log('Connected!');
-    con.query('CREATE DATABASE IF NOT EXISTS venusFOODCOURTMOVIEDB', function (err, result) {
+    con.query('CREATE DATABASE IF NOT EXISTS movieSentimentDB', function (err, result) {
       if (err) throw err;
       console.log('Database created');
     });
