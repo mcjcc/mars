@@ -9,7 +9,7 @@ exports.searchMoviesByName = query => {
   console.log('exports.searchMoviesByName in tmdb file');
   return axios.get('http://api.themoviedb.org/3/search/movie', {
     params: {
-      api_key: process.env.API_KEY,
+      api_key: process.env.TMDB_API_KEY,
       // 'language': 'en-US',
       query,
     },
@@ -27,7 +27,7 @@ exports.fetchMovieById = id => {
   console.log('exports.fetchMovieById in tmdb file');
   return axios.get(`http://api.themoviedb.org/3/movie/${id}`, {
     params: {
-      api_key: process.env.API_KEY,
+      api_key: process.env.TMDB_API_KEY,
       // 'language': 'en-US',
     },
   }).then(res => (
@@ -43,7 +43,7 @@ exports.fetchMovieById = id => {
 exports.fetchImageById = id => {
   return axios.get(`http://api.themoviedb.org/3/movie/${id}/images`, {
     params: {
-      api_key: process.env.API_KEY,
+      api_key: process.env.TMDB_API_KEY,
       // 'language': 'en-US',
     },
   }).then((res) => {
@@ -55,7 +55,7 @@ exports.fetchImageById = id => {
 exports.fetchMoviesNowPlaying = () => {
   return axios.get(`https://api.themoviedb.org/3/movie/now_playing`, {
     params: {
-      api_key: process.env.API_KEY,
+      api_key: process.env.TMDB_API_KEY,
       region: 'US',
     },
   }).then((res) => {
@@ -66,7 +66,7 @@ exports.fetchMoviesNowPlaying = () => {
 exports.fetchMovieTrailersById = (id) => {
   return axios.get(`https://api.themoviedb.org/3/movie/${id}/videos`, {
     params: {
-      api_key: process.env.API_KEY,
+      api_key: process.env.TMDB_API_KEY,
       language: 'en-US'
     },
   }).then((res) => {

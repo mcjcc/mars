@@ -7,8 +7,8 @@ module.exports.timeLine = googleTrends.interestOverTime;
 module.exports.movieTrend = function(title, releaseDate) {
 	var options = {
 		keyword: [title, 'movies'],
-		startTime: moment(releaseDate).add(-6,'months').toDate(),
-		endTime: moment(releaseDate).add(6,'months').toDate()
+		startTime: moment(releaseDate).add(-24,'months').toDate(),
+		endTime: moment(releaseDate).add(24,'months').toDate()
 	}
 	return googleTrends.interestOverTime(options);
 }
@@ -25,18 +25,18 @@ module.exports.movieTrend = function(title, releaseDate) {
 // }
 
 // JSON.parse(result).default.timelineData is an array
-// timelineData[i] has form: 
+// timelineData[i] has form:
 // {
-//   time: String, 
-//   formattedTime: String, 
-//   formattedAxisTime: String, 
-//   value: Number or Array, 
+//   time: String,
+//   formattedTime: String,
+//   formattedAxisTime: String,
+//   value: Number or Array,
 //   formattedValue: String
 // }
 
 // EXAMPLE
 // var options = {
-//   keyword: ['Beauty and the Beast', 'movies'], 
+//   keyword: ['Beauty and the Beast', 'movies'],
 //   startTime: new Date(2017, 1)
 // };
 // googleTrends.interestOverTime(options)
