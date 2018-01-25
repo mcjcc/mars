@@ -11,7 +11,7 @@ export default function App() {
   return (
     <Paper>
       <AppBar
-        title="Movie DB"
+        title="Movie Sentiment DB"
         iconElementLeft={<img src="https://s3-us-west-1.amazonaws.com/venusfoodcourt/moviedb/film-camera.png" alt="Logo" className="header-logo"/>}
       />
       <SearchBox />
