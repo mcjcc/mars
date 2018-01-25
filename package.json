@@ -10,7 +10,9 @@
   "scripts": {
     "start": "node app",
     "test": "mocha specs --recursive --timeout 15000 --exit",
-    "heroku-postbuild": "npm install --only=dev --dev && webpack -p --config ./webpack.config.js --progress"
+    "heroku-postbuild": "npm install --only=dev --dev && webpack -p --config ./webpack.config.js --progress",
+    "server-dev": "nodemon app",
+    "react-dev": "webpack -d --watch"
   },
   "dependencies": {
     "aws-sdk": "^2.162.0",
