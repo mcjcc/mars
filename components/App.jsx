@@ -12,7 +12,7 @@ export default function App() {
     <Paper>
       <AppBar
         title="Movie DB"
-        iconElementLeft={<img src="https://s3.amazonaws.com/tt-public-assets/Cliff_icon.png" alt="Logo" />}
+        iconElementLeft={<img src="https://s3-us-west-1.amazonaws.com/venusfoodcourt/moviedb/film-camera.png" alt="Logo" className="header-logo"/>}
       />
       <SearchBox />
       <MovieDetail />

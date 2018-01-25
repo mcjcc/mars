@@ -84,6 +84,6 @@ body {
   cursor: pointer;
 }
 
-.main-logo {
-  width: 100px;
+.header-logo {
+  height: 45px;
 }
