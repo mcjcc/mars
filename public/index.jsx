@@ -12,7 +12,7 @@ import reducers from '../reducers';
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
 
 ReactDOM.render(
-  <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+  <MuiThemeProvider>
     <Provider store={createStoreWithMiddleware(reducers)}>
       <App />
     </Provider>
