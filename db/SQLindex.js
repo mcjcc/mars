@@ -16,16 +16,17 @@ if (process.env.DATABASE_URL) {
     host: 'localhost',
     dialect: 'mysql',
     logging: false
-  });
-  con.connect(function(err) {
+  }
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log('Connected!');
+  con.query('CREATE DATABASE IF NOT EXISTS movieSentimentDB', function (err, result) {
     if (err) throw err;
-    console.log('Connected!');
-    con.query('CREATE DATABASE IF NOT EXISTS movieSentimentDB', function (err, result) {
-      if (err) throw err;
-      console.log('Database created');
-    });
+    console.log('Database created');
   });
-}
+});
 
 db.authenticate()
   .then(() => {
