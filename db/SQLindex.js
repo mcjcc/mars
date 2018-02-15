@@ -6,6 +6,7 @@ if (process.env.DATABASE_URL) {
   var db = new Sequelize(process.env.DATABASE_URL, {
     logging: true
   });
+  con.connect();
 } else {
   var con = mysql.createConnection({
     host: 'localhost',
@@ -17,16 +18,17 @@ if (process.env.DATABASE_URL) {
     dialect: 'mysql',
     logging: false
   });
+  con.connect(function(err) {
+    if (err) throw err;
+    console.log('Connected!');
+    con.query('CREATE DATABASE IF NOT EXISTS movieSentimentDB', function (err, result) {
+      if (err) throw err;
+      console.log('Database created');
+    });
+  });
 }
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log('Connected!');
-  con.query('CREATE DATABASE IF NOT EXISTS movieSentimentDB', function (err, result) {
-    if (err) throw err;
-    console.log('Database created');
-  });
-});
+
 
 db.authenticate()
   .then(() => {
