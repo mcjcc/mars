@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const mysql = require('mysql');
 
-if (process.env.DATABASE_URL) {
+if (process.env.NODE_ENV === 'production') {
   var con = mysql.createConnection(process.env.DATABASE_URL);
   var db = new Sequelize(process.env.DATABASE_URL, {
     logging: true
