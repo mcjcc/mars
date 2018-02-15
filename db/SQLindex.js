@@ -16,8 +16,8 @@ if (process.env.DATABASE_URL) {
     host: 'localhost',
     dialect: 'mysql',
     logging: false
-  }
-});
+  });
+}
 
 con.connect(function(err) {
   if (err) throw err;
